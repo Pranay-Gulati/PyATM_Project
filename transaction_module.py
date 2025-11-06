@@ -75,6 +75,7 @@ class TransactionManager:
         pin, bal = self.data[self.account]
         if amount > bal:
             print("Insufficient balance.\n")
+            input("Press Enter to continue...")
             return False
         new_bal = bal - amount
         if not self._save_balance(new_bal):
