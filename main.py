@@ -84,6 +84,7 @@ def session_menu(account, data):
             print(f"Withdraw: {wcount}  (₹{total_withdrawn:.2f})")
             print(f"Final Balance: ₹{final_bal:.2f}\n")
             print("Thank you for using PyATM! Have a great day! 💳\n")
+            print("\n==================================")
             time.sleep(1)
             return
 
