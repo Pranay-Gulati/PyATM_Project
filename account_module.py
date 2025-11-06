@@ -4,8 +4,7 @@ from typing import Dict, Tuple
 import time
 
 ACCOUNTS_FILE = "accounts.txt"
-locked_accounts = {}
-LOCK_DURATION = 60 
+
 
 # ---------------- PIN masked input (*) → Cross-platform ----------------
 def get_pin(prompt="Enter 4-digit PIN: "):
@@ -131,45 +130,3 @@ def display_account_info(acc, data):
     print("--------------------------\n")
     input("Press Enter to continue...")       
 
-def login_flow(data):
-    print("\n==== ATM Login ====\n")
-    acc = input("Enter 12-digit Account Number: ").strip()
-
-    # --- TEMPORARY LOCK CHECK ---
-    if acc in locked_accounts:
-        elapsed = time.time() - locked_accounts[acc]
-        if elapsed < LOCK_DURATION:
-            print(f"Account temporarily locked. Try again in {int(LOCK_DURATION - elapsed)} seconds.\n")
-            input("Press Enter to continue...")
-            return ""
-        else:
-            # lock expired
-            del locked_accounts[acc]
-
-    if not validate_account_number(acc):
-        print("Invalid account number.\n")
-        input("Press Enter to continue...")
-        return ""
-    if acc not in data:
-        print("Account not found.\n")
-        input("Press Enter to continue...")
-        return ""
-
-    stored_pin, _ = data[acc]
-    attempts = 0
-    MAX_ATTEMPTS = 3
-
-    while attempts < MAX_ATTEMPTS:
-        pin = get_pin("Enter PIN: ")
-        if pin == stored_pin:
-            print("\nLogin successful.\n")
-            input("Press Enter to continue...")
-            return acc
-        attempts += 1
-        print(f"Wrong PIN. Attempts left: {MAX_ATTEMPTS - attempts}\n")
-
-    # --- TEMPORARY LOCK ACTIVATED ---
-    locked_accounts[acc] = time.time()
-    print(f"Account locked for 1 minute.\n")
-    input("Press Enter to continue...")
-    return ""
